@@ -10,6 +10,9 @@ interface Todo {
   completed: boolean;
 }
 
+// ✅ Use emulator-safe localhost IP
+const BASE_URL = 'http://10.0.2.2:5000/api/todos';
+
 const TodosScreen = () => {
   const { isDark } = useTheme();
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -17,7 +20,7 @@ const TodosScreen = () => {
 
   const fetchTodos = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/todos');
+      const res = await axios.get(BASE_URL);
       setTodos(res.data);
     } catch (err) {
       console.error('Fetch error:', err);
@@ -27,7 +30,7 @@ const TodosScreen = () => {
   const addTodo = async () => {
     if (!newTask.trim()) return;
     try {
-      const res = await axios.post('http://localhost:5000/api/todos', {
+      const res = await axios.post(BASE_URL, {
         title: newTask,
       });
       setTodos([...todos, res.data]);
@@ -39,7 +42,7 @@ const TodosScreen = () => {
 
   const updateTodo = async (id: string, updated: Partial<Todo>) => {
     try {
-      const res = await axios.put(`http://localhost:5000/api/todos/${id}`, updated);
+      const res = await axios.put(`${BASE_URL}/${id}`, updated);
       setTodos(todos.map(todo => (todo._id === id ? res.data : todo)));
     } catch (err) {
       console.error('Update error:', err);
@@ -48,7 +51,7 @@ const TodosScreen = () => {
 
   const deleteTodo = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:5000/api/todos/${id}`);
+      await axios.delete(`${BASE_URL}/${id}`);
       setTodos(todos.filter(todo => todo._id !== id));
     } catch (err) {
       console.error('Delete error:', err);
@@ -57,7 +60,7 @@ const TodosScreen = () => {
 
   const deleteAllTodos = async () => {
     try {
-      await axios.delete('http://localhost:5000/api/todos');
+      await axios.delete(BASE_URL);
       setTodos([]);
     } catch (err) {
       console.error('Delete all error:', err);

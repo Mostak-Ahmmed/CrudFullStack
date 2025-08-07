@@ -1,6 +1,10 @@
-const API_URL = 'http://192.168.31.118:5000/users'; // use your local IP for real device
 
-// Fetch all users
+//const API_URL = 'http://192.168.31.118:5000/users'; // ✅ Use your local IP
+
+const API_URL = 'http://10.0.2.2:5000/users';
+
+
+// ✅ Fetch all users
 export const getUsers = async () => {
   try {
     const res = await fetch(API_URL);
@@ -12,7 +16,7 @@ export const getUsers = async () => {
   }
 };
 
-// Create a new user
+// ✅ Create a new user
 export const createUser = async (user: any) => {
   try {
     const res = await fetch(API_URL, {
@@ -28,7 +32,7 @@ export const createUser = async (user: any) => {
   }
 };
 
-// Delete user by ID
+// ✅ Delete user by ID
 export const deleteUser = async (id: string) => {
   try {
     const res = await fetch(`${API_URL}/${id}`, {

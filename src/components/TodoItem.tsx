@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 
 interface Todo {
@@ -20,39 +26,69 @@ const TodoItem: React.FC<Props> = ({ todo, onToggle, onDelete, onEdit }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedText, setEditedText] = useState(todo.title);
 
-  const handleEdit = () => {
-    if (isEditing && editedText.trim()) onEdit(editedText);
-    setIsEditing(!isEditing);
+  const handleEditSave = () => {
+    if (isEditing && editedText.trim()) {
+      onEdit(editedText);
+      setIsEditing(false);
+    }
   };
 
   return (
-    <View style={[styles.item, { backgroundColor: isDark ? '#333' : '#eee' }]}>
+    <View
+      style={[
+        styles.card,
+        { backgroundColor: isDark ? '#1a1a2e' : '#f0f0f0' },
+      ]}
+    >
       <TouchableOpacity onPress={onToggle}>
-        <Text style={[styles.checkbox, todo.completed && styles.checked]}>
+        <Text style={[styles.check, { color: todo.completed ? '#00ff88' : '#888' }]}>
           {todo.completed ? '✔' : '◻'}
         </Text>
       </TouchableOpacity>
 
       {isEditing ? (
         <TextInput
-          style={styles.input}
           value={editedText}
           onChangeText={setEditedText}
-          onSubmitEditing={handleEdit}
+          placeholder="Edit task..."
+          placeholderTextColor="#999"
+          style={[
+            styles.editInput,
+            { color: isDark ? '#fff' : '#000', backgroundColor: isDark ? '#2e2e3e' : '#fff' },
+          ]}
         />
       ) : (
-        <Text style={[styles.title, todo.completed && styles.completed]} onLongPress={handleEdit}>
+        <Text
+          onLongPress={() => setIsEditing(true)}
+          style={[
+            styles.taskText,
+            { color: isDark ? '#fff' : '#000' },
+            todo.completed && styles.completed,
+          ]}
+        >
           {todo.title}
         </Text>
       )}
 
-      <TouchableOpacity onPress={handleEdit}>
-        <Text style={styles.editBtn}>{isEditing ? '💾' : '✏️'}</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={onDelete}>
-        <Text style={styles.deleteBtn}>🗑️</Text>
-      </TouchableOpacity>
+      {isEditing ? (
+        <View style={styles.editActions}>
+          <TouchableOpacity onPress={handleEditSave}>
+            <Text style={styles.saveBtn}>✅ Save</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setIsEditing(false)}>
+            <Text style={styles.cancelBtn}>❌ Cancel</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View style={styles.iconActions}>
+          <TouchableOpacity onPress={() => setIsEditing(true)}>
+            <Text style={styles.editIcon}>✏️</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={onDelete}>
+            <Text style={styles.deleteIcon}>🗑️</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
@@ -60,24 +96,58 @@ const TodoItem: React.FC<Props> = ({ todo, onToggle, onDelete, onEdit }) => {
 export default TodoItem;
 
 const styles = StyleSheet.create({
-  item: {
+  card: {
     flexDirection: 'row',
-    padding: 10,
-    marginBottom: 6,
-    borderRadius: 5,
     alignItems: 'center',
+    padding: 12,
+    borderRadius: 12,
+    marginBottom: 10,
+    gap: 10,
   },
-  checkbox: { fontSize: 18, marginRight: 10 },
-  checked: { color: 'green' },
-  title: { flex: 1, fontSize: 16 },
-  completed: { textDecorationLine: 'line-through', color: '#777' },
-  input: {
+  check: {
+    fontSize: 20,
+    paddingTop: 3,
+  },
+  taskText: {
     flex: 1,
     fontSize: 16,
-    borderBottomWidth: 1,
-    borderColor: '#aaa',
-    paddingVertical: 2,
   },
-  editBtn: { marginLeft: 10, fontSize: 18 },
-  deleteBtn: { marginLeft: 10, fontSize: 18 },
+  completed: {
+    textDecorationLine: 'line-through',
+    color: '#777',
+  },
+  editInput: {
+    flex: 1,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    fontSize: 16,
+  },
+  iconActions: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  editIcon: {
+    fontSize: 18,
+    color: '#ffc107',
+  },
+  deleteIcon: {
+    fontSize: 18,
+    color: '#ff4d4f',
+  },
+  editActions: {
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center',
+  },
+  saveBtn: {
+    color: '#00ff88',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+  cancelBtn: {
+    color: '#ff4444',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
 });

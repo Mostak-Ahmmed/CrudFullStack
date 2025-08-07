@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+  StyleSheet,
+} from 'react-native';
 import axios from 'axios';
 import TodoItem from '../components/TodoItem';
 import { useTheme } from '../context/ThemeContext';
@@ -10,7 +17,6 @@ interface Todo {
   completed: boolean;
 }
 
-// ✅ Use emulator-safe localhost IP
 const BASE_URL = 'http://10.0.2.2:5000/api/todos';
 
 const TodosScreen = () => {
@@ -80,13 +86,25 @@ const TodosScreen = () => {
       <Text style={[styles.subtext, { color: isDark ? '#ccc' : '#333' }]}>
         {completedCount} of {todos.length} completed
       </Text>
-      <Text style={[styles.progressText, { color: isDark ? '#0f0' : '#080' }]}>
+
+      {/* Progress Bar */}
+      <View style={styles.progressBarBackground}>
+        <View style={[styles.progressBarFill, { width: `${progress}%`, backgroundColor: '#00ff88' }]} />
+      </View>
+      <Text style={[styles.percentText, { color: isDark ? '#0f0' : '#080' }]}>
         {progress.toFixed(0)}%
       </Text>
 
+      {/* Add Task */}
       <View style={styles.inputRow}>
         <TextInput
-          style={[styles.input, { color: isDark ? '#fff' : '#000', borderColor: isDark ? '#666' : '#aaa' }]}
+          style={[
+            styles.input,
+            {
+              color: isDark ? '#fff' : '#000',
+              backgroundColor: isDark ? '#1f1f2e' : '#f2f2f2',
+            },
+          ]}
           placeholder="What needs to be done?"
           placeholderTextColor={isDark ? '#888' : '#666'}
           value={newTask}
@@ -97,6 +115,7 @@ const TodosScreen = () => {
         </TouchableOpacity>
       </View>
 
+      {/* Task List */}
       <FlatList
         data={todos}
         keyExtractor={(item) => item._id}
@@ -108,11 +127,15 @@ const TodosScreen = () => {
             onEdit={(title) => updateTodo(item._id, { title })}
           />
         )}
+        contentContainerStyle={{ paddingBottom: 100 }}
       />
 
-      <TouchableOpacity style={styles.clearBtn} onPress={deleteAllTodos}>
-        <Text style={styles.clearBtnText}>Clear All 🚨</Text>
-      </TouchableOpacity>
+      {/* Clear All */}
+      {todos.length > 0 && (
+        <TouchableOpacity style={styles.clearBtn} onPress={deleteAllTodos}>
+          <Text style={styles.clearText}>Clear All 🧹</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -120,30 +143,71 @@ const TodosScreen = () => {
 export default TodosScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16 },
-  heading: { fontSize: 24, fontWeight: 'bold', marginBottom: 4 },
-  subtext: { fontSize: 16 },
-  progressText: { marginBottom: 12, fontSize: 16, fontWeight: '600' },
-  inputRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
+  container: {
+    flex: 1,
+    padding: 18,
+  },
+  heading: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  subtext: {
+    fontSize: 16,
+    marginBottom: 6,
+  },
+  percentText: {
+    marginTop: 2,
+    marginBottom: 12,
+    fontWeight: '600',
+  },
+  progressBarBackground: {
+    height: 6,
+    width: '100%',
+    backgroundColor: '#333',
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    borderRadius: 10,
+  },
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    gap: 8,
+  },
   input: {
     flex: 1,
-    borderBottomWidth: 1,
-    paddingVertical: 4,
-    marginRight: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    fontSize: 16,
+    borderRadius: 12,
   },
   addBtn: {
-    backgroundColor: '#0d6efd',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 5,
+    backgroundColor: '#00ff88',
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 12,
   },
-  addBtnText: { color: '#fff', fontSize: 18 },
+  addBtnText: {
+    fontSize: 18,
+    color: '#000',
+  },
   clearBtn: {
-    backgroundColor: '#dc3545',
-    padding: 12,
-    borderRadius: 5,
-    marginTop: 16,
+    position: 'absolute',
+    bottom: 20,
+    left: 18,
+    right: 18,
+    backgroundColor: '#ff4d4f',
+    paddingVertical: 14,
+    borderRadius: 12,
     alignItems: 'center',
   },
-  clearBtnText: { color: '#fff', fontWeight: 'bold' },
+  clearText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 16,
+  },
 });

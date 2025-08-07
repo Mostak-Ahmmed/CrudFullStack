@@ -6,6 +6,8 @@ This is a new [**React Native**](https://reactnative.dev) project, bootstrapped 
 
 
 <img width="342" height="662" alt="image" src="https://github.com/user-attachments/assets/149d3e54-a0cc-42c4-8b96-28a83e983107" />
+<img width="331" height="662" alt="image" src="https://github.com/user-attachments/assets/abc6bf98-8c2f-42d3-b358-2dfa2e30fd31" />
+
 <img width="362" height="668" alt="image" src="https://github.com/user-attachments/assets/a328a9e2-ee3d-4f8f-aa21-86497497f7f6" />
 
 
